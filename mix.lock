@@ -1,0 +1,3 @@
+%{
+  "elixir_cmake": {:hex, :elixir_cmake, "0.1.0", "8be003f2dd532113ca414e3358b7352de1018612d4045eb0c6d6ce19f4f5873d", [:mix], [], "hexpm"},
+}

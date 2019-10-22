@@ -1,0 +1,3 @@
+[submodule "src/libplctag"]
+	path = src/libplctag
+	url = git@github.com:kyle-github/libplctag.git

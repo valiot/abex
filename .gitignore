@@ -1,5 +1,6 @@
 # The directory Mix will write compiled artifacts to.
 /_build/
+/_cmake/
 
 # If you run "mix test --cover", coverage assets end up here.
 /cover/
@@ -22,3 +23,6 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 abex-*.tar
 
+.elixir_ls
+
+.vscode/
