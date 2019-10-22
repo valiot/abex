@@ -1,3 +1,5 @@
 %{
   "elixir_cmake": {:hex, :elixir_cmake, "0.1.0", "8be003f2dd532113ca414e3358b7352de1018612d4045eb0c6d6ce19f4f5873d", [:mix], [], "hexpm"},
+  "elixir_make": {:hex, :elixir_make, "0.6.0", "38349f3e29aff4864352084fc736fa7fa0f2995a819a737554f7ebd28b85aaab", [:mix], [], "hexpm"},
+  "muontrap": {:hex, :muontrap, "0.5.0", "0b885a4095e990000d519441bccb8f037a9c4c35908720e7814a516a606be278", [:make, :mix], [{:elixir_make, "~> 0.6", [hex: :elixir_make, repo: "hexpm", optional: false]}], "hexpm"},
 }

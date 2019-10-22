@@ -8,8 +8,6 @@ endif()
 # this is the root libplctag project
 project (libplctag_project)
 
-message(STATUS "Value of FOO is ${MIX_COMPILE_PATH}")
-
 # make sure our outputs are going somewhere sane
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY $ENV{MIX_COMPILE_PATH}/../priv)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY $ENV{MIX_COMPILE_PATH}/../priv)

@@ -36,11 +36,6 @@ struct program_entry_s {
     char *program_name;
 };
 
-void usage()
-{
-    printf("Usage: list_tags <PLC IP> <PLC path>\nExample: list_tags 10.1.2.3 1,0\n");
-    exit(1);
-}
 
 int32_t setup_tag(char *plc_ip, char *path, char *program)
 {
@@ -58,7 +53,7 @@ int32_t setup_tag(char *plc_ip, char *path, char *program)
     tag = plc_tag_create(tag_string, TIMEOUT_MS);
     if(tag < 0) {
         printf("Unable to open tag!  Return code %s\n", plc_tag_decode_error(tag));
-        usage();
+        exit(1);
     }
 
     return tag;
@@ -74,7 +69,7 @@ void get_list(int32_t tag, struct program_entry_s **head)
     rc = plc_tag_read(tag, TIMEOUT_MS);
     if(rc != PLCTAG_STATUS_OK) {
         printf("Unable to read tag!  Return code %s\n",plc_tag_decode_error(tag));
-        usage();
+        exit(1);
     }
 
     do {
@@ -130,7 +125,7 @@ void get_list(int32_t tag, struct program_entry_s **head)
 
             if(!entry) {
                 fprintf(stderr,"Unable to allocate memory for program entry!\n");
-                usage();
+                exit(1);
             }
 
             printf("\tFound program: %s\n", tag_name);
@@ -154,17 +149,17 @@ int main(int argc, char **argv)
     struct program_entry_s *programs = NULL;
 
     if(argc < 3) {
-        usage();
+        exit(1);
     }
 
     if(!argv[1] || strlen(argv[1]) == 0) {
         printf("Hostname or IP address must not be zero length!\n");
-        usage();
+        exit(1);
     }
 
     if(!argv[2] || strlen(argv[2]) == 0) {
         printf("PLC path must not be zero length!\n");
-        usage();
+        exit(1);
     }
 
     /* get the controller tags first. */
