@@ -48,8 +48,6 @@ int32_t setup_tag(char *plc_ip, char *path, char *program)
         snprintf(tag_string, TAG_STRING_SIZE-1,"protocol=ab-eip&gateway=%s&path=%s&cpu=lgx&name=%s.@tags", plc_ip, path, program);
     }
 
-    printf("Using tag string: %s\n", tag_string);
-
     tag = plc_tag_create(tag_string, TIMEOUT_MS);
     if(tag < 0) {
         printf("Unable to open tag!  Return code %s\n", plc_tag_decode_error(tag));
@@ -118,7 +116,7 @@ void get_list(int32_t tag, struct program_entry_s **head)
 
         index++;
 
-        printf("index %d: Tag name=%s, tag instance ID=%x, tag type=%x, element length (in bytes) = %d, array dimensions = (%d, %d, %d)\n", index, tag_name, tag_instance_id, tag_type, (int)element_length, (int)array_dims[0], (int)array_dims[1], (int)array_dims[2]);
+        printf("tag_name=%s; tag_instance_id=%x; tag_type=%x; element_length=%d; array_dimensions=(%d, %d, %d)\n", tag_name, tag_instance_id, tag_type, (int)element_length, (int)array_dims[0], (int)array_dims[1], (int)array_dims[2]);
 
         if(head && strncmp(tag_name, "Program:", strlen("Program:")) == 0) {
             struct program_entry_s *entry = malloc(sizeof(*entry));
@@ -127,8 +125,6 @@ void get_list(int32_t tag, struct program_entry_s **head)
                 fprintf(stderr,"Unable to allocate memory for program entry!\n");
                 exit(1);
             }
-
-            printf("\tFound program: %s\n", tag_name);
 
             entry->next = *head;
             entry->program_name = strdup(tag_name);
@@ -163,17 +159,15 @@ int main(int argc, char **argv)
     }
 
     /* get the controller tags first. */
-
-    printf("Getting controller tags.\n");
-
     tag = setup_tag(argv[1], argv[2], NULL);
 
     get_list(tag, &programs);
 
+    /* get the tags for program. */
+    printf("Program tags\n");
     while(programs) {
         struct program_entry_s *program = programs;
-
-        printf("\n\nGetting tags for program: %s.\n", program->program_name);
+        printf("\r\n%s!", program->program_name);
         tag = setup_tag(argv[1], argv[2], program->program_name);
         get_list(tag, NULL);
 
