@@ -8,8 +8,14 @@ defmodule Abex.MixProject do
       app: :abex,
       version: "0.1.0",
       elixir: "~> 1.9",
+      name: "ABex",
+      description: description(),
+      package: package(),
+      source_url: "https://github.com/valiot/abex",
       start_permanent: Mix.env() == :prod,
       compilers: [:cmake] ++ Mix.compilers(),
+      docs: [extras: ["README.md"], main: "readme"],
+      build_embedded: true,
       deps: deps()
     ]
   end
@@ -18,6 +24,28 @@ defmodule Abex.MixProject do
   def application do
     [
       extra_applications: [:logger]
+    ]
+  end
+
+  defp description() do
+    "Elixir wrapper for Libplctag, for communication with Allen-Bradley PLC's."
+  end
+
+  defp package() do
+    [
+      files: [
+        "lib",
+        "src",
+        "src/libplctag",
+        "src/libplctag/src",
+        "test",
+        "mix.exs",
+        "README.md",
+        "LICENSE"
+      ],
+      maintainers: ["valiot"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/valiot/abex"}
     ]
   end
 
