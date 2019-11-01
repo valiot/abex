@@ -206,32 +206,32 @@ int main(int argc, char **argv)
             for(i=0; index < plc_tag_get_size(tag); i++) {
                 switch(data_type) {
                 case PLC_LIB_UINT8:
-                    printf("%u ",plc_tag_get_uint8(tag,index));
+                    printf("%u ", plc_tag_get_uint8(tag,index));
                     index += 1;
                     break;
 
                 case PLC_LIB_UINT16:
-                    printf("%u ",i,plc_tag_get_uint16(tag,index),plc_tag_get_uint16(tag,index));
+                    printf("%u ", plc_tag_get_uint16(tag,index));
                     index += 2;
                     break;
 
                 case PLC_LIB_UINT32:
-                    printf("%u ",i,plc_tag_get_uint32(tag,index),plc_tag_get_uint32(tag,index));
+                    printf("%u ", plc_tag_get_uint32(tag,index));
                     index += 4;
                     break;
 
                 case PLC_LIB_SINT8:
-                    printf("%d ",i,plc_tag_get_int8(tag,index),plc_tag_get_int8(tag,index));
+                    printf("%d ", plc_tag_get_int8(tag,index));
                     index += 1;
                     break;
 
                 case PLC_LIB_SINT16:
-                    printf("%d ",i,plc_tag_get_int16(tag,index),plc_tag_get_int16(tag,index));
+                    printf("%d ", plc_tag_get_int16(tag,index));
                     index += 2;
                     break;
 
                 case PLC_LIB_SINT32:
-                    printf("%d ",i,plc_tag_get_int32(tag,index),plc_tag_get_int32(tag,index));
+                    printf("%d ", plc_tag_get_int32(tag,index));
                     index += 4;
                     break;
 

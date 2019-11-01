@@ -10,7 +10,9 @@ by adding `abex` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:abex, "~> 0.1.0"}
+    {:abex, "~> 0.1.0"},
+    # the current elixir-cmake (0.1.0) hex package is not compatible.
+    {:elixir_cmake, github: "valiot/elixir-cmake", override: true}
   ]
 end
 ```

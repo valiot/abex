@@ -2,8 +2,6 @@ defmodule Abex.MixProject do
   use Mix.Project
 
   def project do
-    #elixir cmake should put compile as default path.
-    System.put_env("MIX_COMPILE_PATH", Mix.Project.compile_path(build_per_environment: true, app: :abex))
     [
       app: :abex,
       version: "0.1.0",
@@ -35,9 +33,10 @@ defmodule Abex.MixProject do
     [
       files: [
         "lib",
-        "src",
-        "src/libplctag",
+        "src/*.c",
+        "src/libplctag/libplctag.pc.in",
         "src/libplctag/src",
+        "CMakeLists.txt",
         "test",
         "mix.exs",
         "README.md",
@@ -52,7 +51,10 @@ defmodule Abex.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      # it requires an update to elixir_cmake hex dependency
+      #{:elixir_cmake, github: "valiot/elixir-cmake"},
       {:elixir_cmake, "~> 0.1.0"},
+      {:ex_doc, "~> 0.19", only: :dev},
       {:muontrap, "~> 0.5.0"}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}

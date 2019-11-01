@@ -14,6 +14,12 @@ defmodule Abex.Tag do
   end
 
   def init(args) do
+    ld_dirs =
+      System.get_env("LD_LIBRARY_PATH")
+      |> Path.join(":")
+      |> Path.join(:code.priv_dir(:abex) |> to_string())
+
+    System.put_env("LD_LIBRARY_PATH", ld_dirs)
 
     state = %__MODULE__{
       ip: Keyword.fetch!(args, :ip),
@@ -43,6 +49,7 @@ defmodule Abex.Tag do
     response =
       MuonTrap.cmd(read_all_tags_cmd, [ip, path])
       |> assemble_response(:get_all_tags)
+      |> encapsulate_response()
 
     {:reply, response, state}
   end
@@ -60,6 +67,7 @@ defmodule Abex.Tag do
       MuonTrap.cmd(read_tag_cmd, ["-t", params[:data_type], "-p", cmd_args])
       |> assemble_response(:read)
       |> data_type_parser(params[:data_type])
+      |> encapsulate_response()
 
     {:reply, response, state}
   end
@@ -96,7 +104,7 @@ defmodule Abex.Tag do
     |> assemble_program_tags()
   end
 
-  defp assemble_response(reason,_task), do: {:error, reason}
+  defp assemble_response(reason, _task), do: {:error, reason}
 
   defp assemble_tag_map([], acc), do: acc
   defp assemble_tag_map([tag_info | tail], acc) do
@@ -141,6 +149,10 @@ defmodule Abex.Tag do
     ctrl_tags = String.split(str_ctrl_tags, "\n") |> List.delete("") |> assemble_tag_map(%{})
     {str_prog_data, Map.put(acc, :controller_tags, ctrl_tags)}
   end
+
+  defp encapsulate_response(response) when is_tuple(response), do: response
+  defp encapsulate_response(response), do: {:ok, response}
+
 
   defp data_type_parser(raw_data, _any_data_type) when is_tuple(raw_data), do: raw_data
   defp data_type_parser(raw_data, "real32"), do: Enum.map(raw_data, fn(x) -> String.to_float(x) end)
