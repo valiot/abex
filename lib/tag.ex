@@ -14,12 +14,11 @@ defmodule Abex.Tag do
   end
 
   def init(args) do
-    ld_dirs =
-      System.get_env("LD_LIBRARY_PATH")
-      |> Path.join(":")
-      |> Path.join(:code.priv_dir(:abex) |> to_string())
-
-    System.put_env("LD_LIBRARY_PATH", ld_dirs)
+    _lib_dir =
+      :abex
+      |> :code.priv_dir()
+      |> to_string()
+      |> set_ld_library_path()
 
     state = %__MODULE__{
       ip: Keyword.fetch!(args, :ip),
@@ -89,9 +88,7 @@ defmodule Abex.Tag do
   end
 
   defp assemble_response({reason, 1}, _task), do: {:error, reason}
-
   defp assemble_response({_data, 0}, :write), do: :ok
-
   defp assemble_response({data, 0}, :read) do
     data
     |> String.split(" ")
@@ -153,8 +150,24 @@ defmodule Abex.Tag do
   defp encapsulate_response(response) when is_tuple(response), do: response
   defp encapsulate_response(response), do: {:ok, response}
 
-
   defp data_type_parser(raw_data, _any_data_type) when is_tuple(raw_data), do: raw_data
   defp data_type_parser(raw_data, "real32"), do: Enum.map(raw_data, fn(x) -> String.to_float(x) end)
   defp data_type_parser(raw_data, _any_data_type), do: Enum.map(raw_data, fn(x) -> String.to_integer(x) end)
+
+  defp set_ld_library_path(priv_dir) do
+    System.get_env("LD_LIBRARY_PATH", "")
+    |> String.contains?(priv_dir)
+    |> write_ld_library_path(priv_dir)
+  end
+
+  defp write_ld_library_path(false, priv_dir) do
+    ld_dirs =
+      System.get_env("LD_LIBRARY_PATH", "")
+      |> Path.join(":")
+      |> Path.join(priv_dir)
+    System.put_env("LD_LIBRARY_PATH", ld_dirs)
+    priv_dir
+  end
+
+  defp write_ld_library_path(true, priv_dir), do: priv_dir
 end

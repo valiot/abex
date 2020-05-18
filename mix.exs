@@ -4,7 +4,7 @@ defmodule Abex.MixProject do
   def project do
     [
       app: :abex,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.9",
       name: "ABex",
       description: description(),
@@ -52,8 +52,8 @@ defmodule Abex.MixProject do
   defp deps do
     [
       # it requires an update to elixir_cmake hex dependency
-      #{:elixir_cmake, github: "valiot/elixir-cmake"},
-      {:elixir_cmake, "~> 0.1.0"},
+      {:elixir_cmake, github: "valiot/elixir-cmake", branch: "dev"},
+      # {:elixir_cmake, "~> 0.1.0"},
       {:ex_doc, "~> 0.19", only: :dev},
       {:muontrap, "~> 0.5.0"}
       # {:dep_from_hexpm, "~> 0.3.0"},
