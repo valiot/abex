@@ -7,7 +7,7 @@ defmodule Abex.Tag do
 
   defstruct ip: nil,
             path: nil,
-            cpu: nil
+            plc: nil
 
   def start_link(args, opts \\ []) do
     GenServer.start_link(__MODULE__, args, opts)
@@ -23,7 +23,7 @@ defmodule Abex.Tag do
     state = %__MODULE__{
       ip: Keyword.fetch!(args, :ip),
       path: Keyword.get(args, :path, "1,0"),
-      cpu: Keyword.get(args, :cpu, "lgx")
+      plc: Keyword.get(args, :plc, "controllogix")
     }
 
     {:ok, state}
@@ -53,14 +53,14 @@ defmodule Abex.Tag do
     {:reply, response, state}
   end
 
-  def handle_call({:read, params}, _from, %{ip: ip, path: path, cpu: cpu} = state) do
+  def handle_call({:read, params}, _from, %{ip: ip, path: path, plc: plc} = state) do
     read_tag_cmd =
       :code.priv_dir(:abex)
       |> to_string()
       |> Path.join("rw_tag")
 
     cmd_args =
-      "protocol=ab_eip&gateway=#{ip}&path=#{path}&cpu=#{cpu}&elem_size=#{params[:elem_size]}&elem_count=#{params[:elem_count]}&name=#{params[:name]}"
+      "protocol=ab_eip&gateway=#{ip}&path=#{path}&plc=#{plc}&elem_size=#{params[:elem_size]}&elem_count=#{params[:elem_count]}&name=#{params[:name]}"
 
     response =
       MuonTrap.cmd(read_tag_cmd, ["-t", params[:data_type], "-p", cmd_args])
@@ -71,14 +71,14 @@ defmodule Abex.Tag do
     {:reply, response, state}
   end
 
-  def handle_call({:write, params}, _from,%{ip: ip, path: path, cpu: cpu} = state) do
+  def handle_call({:write, params}, _from,%{ip: ip, path: path, plc: plc} = state) do
     write_tag_cmd =
       :code.priv_dir(:abex)
       |> to_string()
       |> Path.join("rw_tag")
 
     cmd_args =
-        "protocol=ab_eip&gateway=#{ip}&path=#{path}&cpu=#{cpu}&elem_size=#{params[:elem_size]}&elem_count=#{params[:elem_count]}&name=#{params[:name]}"
+        "protocol=ab_eip&gateway=#{ip}&path=#{path}&plc=#{plc}&elem_size=#{params[:elem_size]}&elem_count=#{params[:elem_count]}&name=#{params[:name]}"
 
     response =
       MuonTrap.cmd(write_tag_cmd, ["-t", params[:data_type], "-w", params[:value] , "-p", cmd_args])
