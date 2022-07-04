@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 2.8...3.19)
 
 # prevent expansion of quoted things that could be variables in if()
 if(${CMAKE_VERSION} VERSION_GREATER 3.1)
@@ -89,6 +89,10 @@ else()
 endif()
 
 set(BASE_CXX_FLAGS "${BASE_FLAGS}")
+
+# clear incompatible flags
+string(REPLACE "-fPIE" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+string(REPLACE "-fPIE" "" BASE_C_FLAGS "${BASE_C_FLAGS}")
 
 # generate version file from CMake info.
 CONFIGURE_FILE("${lib_SRC_PATH}/version.c.in" "${lib_SRC_PATH}/version.c" @ONLY)
@@ -268,6 +272,7 @@ install(TARGETS plctag_static DESTINATION lib${LIB_SUFFIX})
 install(FILES "${lib_SRC_PATH}/libplctag.h" DESTINATION include)
 install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libplctag.pc" DESTINATION "lib${LIB_SUFFIX}/pkgconfig")
 
+message(STATUS "Debug CMAKE_C_FLAGS=${CMAKE_C_FLAGS}; BASE_C_FLAGS=${BASE_C_FLAGS}")
 
 macro(print_all_variables)
     message(STATUS "print_all_variables------------------------------------------{")
