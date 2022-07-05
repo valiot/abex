@@ -91,8 +91,8 @@ endif()
 set(BASE_CXX_FLAGS "${BASE_FLAGS}")
 
 # clear incompatible flags
-string(REPLACE "-fPIE" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-string(REPLACE "-fPIE" "" BASE_C_FLAGS "${BASE_C_FLAGS}")
+string(REPLACE "-fPIE" "-fPIC" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+string(REPLACE "-fPIE" "-fPIC" BASE_C_FLAGS "${BASE_C_FLAGS}")
 
 # generate version file from CMake info.
 CONFIGURE_FILE("${lib_SRC_PATH}/version.c.in" "${lib_SRC_PATH}/version.c" @ONLY)
