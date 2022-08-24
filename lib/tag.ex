@@ -1,6 +1,6 @@
 defmodule Abex.Tag do
   @moduledoc """
-  Handles gathering the .
+  Handles Tag interactions with an Allen-Bradley PLC.
   """
   use GenServer
   require Logger
