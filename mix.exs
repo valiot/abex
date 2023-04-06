@@ -52,12 +52,9 @@ defmodule Abex.MixProject do
   defp deps do
     [
       # it requires an update to elixir_cmake hex dependency
-      {:elixir_cmake, github: "valiot/elixir-cmake", branch: "dev"},
-      # {:elixir_cmake, "~> 0.1.0"},
+      {:elixir_cmake, "~> 0.8"},
       {:ex_doc, "~> 0.28", only: :dev},
-      {:muontrap, "~> 1.0.0"}
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+      {:muontrap, "~> 1.2"},
     ]
   end
 end
