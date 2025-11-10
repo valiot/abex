@@ -78,12 +78,14 @@ add_subdirectory("${base_PATH}" libplctag_build)
 
 # Now build our abex-specific programs
 set(abex_PROGRAMS tag_list rw_tag)
+set(libplctag_EXAMPLES tag_rw2)
 
 # abex programs need compat_utils from libplctag examples
 set(abex_UTIL_SOURCES 
     "${base_PATH}/src/examples/compat_utils.c" 
     "${base_PATH}/src/examples/compat_utils.h")
 
+# Build abex custom programs
 foreach(program ${abex_PROGRAMS})
     set_source_files_properties("${abex_SRC_PATH}/${program}.c" PROPERTIES COMPILE_FLAGS ${BASE_C_FLAGS})
     set_source_files_properties("${base_PATH}/src/examples/compat_utils.c" PROPERTIES COMPILE_FLAGS ${BASE_C_FLAGS})
@@ -102,4 +104,24 @@ foreach(program ${abex_PROGRAMS})
     endif()
 endforeach(program)
 
+# Build libplctag example programs
+foreach(program ${libplctag_EXAMPLES})
+    set_source_files_properties("${base_PATH}/src/examples/${program}.c" PROPERTIES COMPILE_FLAGS ${BASE_C_FLAGS})
+    set_source_files_properties("${base_PATH}/src/examples/compat_utils.c" PROPERTIES COMPILE_FLAGS ${BASE_C_FLAGS})
+    
+    add_executable(${program} "${base_PATH}/src/examples/${program}.c" "${abex_UTIL_SOURCES}")
+    
+    # Link with the plctag library and threads
+    target_link_libraries(${program} plctag_dyn)
+    
+    if(UNIX)
+        if(CMAKE_THREAD_LIBS_INIT)
+            target_link_libraries(${program} "${CMAKE_THREAD_LIBS_INIT}")
+        endif()
+    elseif(WIN32)
+        target_link_libraries(${program} ws2_32)
+    endif()
+endforeach(program)
+
 message(STATUS "ABex programs configured: ${abex_PROGRAMS}")
+message(STATUS "libplctag examples configured: ${libplctag_EXAMPLES}")
