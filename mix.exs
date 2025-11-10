@@ -4,7 +4,7 @@ defmodule Abex.MixProject do
   def project do
     [
       app: :abex,
-      version: "0.1.2",
+      version: "0.2.0",
       elixir: "~> 1.9",
       name: "ABex",
       description: description(),
