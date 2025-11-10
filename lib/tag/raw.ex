@@ -41,6 +41,10 @@ defmodule Abex.Tag.Raw do
       )
   """
 
+  defp cmd_runner do
+    Application.get_env(:abex, :cmd_runner, Abex.CmdWrapper)
+  end
+
   @type data_type ::
           :bit
           | :uint8
@@ -263,7 +267,7 @@ defmodule Abex.Tag.Raw do
       |> to_string()
       |> Path.join("tag_rw2")
 
-    case MuonTrap.cmd(tag_rw2_cmd, args) do
+    case cmd_runner().cmd(tag_rw2_cmd, args) do
       {output, 0} ->
         parse_output(output, operation, type)
 

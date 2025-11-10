@@ -55,6 +55,7 @@ defmodule Abex.MixProject do
       {:elixir_cmake, "~> 0.8"},
       {:ex_doc, "~> 0.28", only: :dev},
       {:muontrap, "~> 1.2"},
+      {:mox, "~> 1.0", only: :test}
     ]
   end
 end
