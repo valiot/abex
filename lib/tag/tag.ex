@@ -9,6 +9,10 @@ defmodule Abex.Tag do
             path: nil,
             cpu: nil
 
+  defp cmd_runner do
+    Application.get_env(:abex, :cmd_runner, Abex.CmdWrapper)
+  end
+
   def start_link(args, opts \\ []) do
     GenServer.start_link(__MODULE__, args, opts)
   end
@@ -39,14 +43,14 @@ defmodule Abex.Tag do
     Logger.error("(#{__MODULE__}) Error: #{inspect({reason, state})}.")
   end
 
-  def handle_call(:get_all_tags, _from, %{ip: ip, path: path} = state) do
+  def handle_call(:get_all_tags, _from, %{ip: ip, path: path, cpu: _cpu} = state) do
     read_all_tags_cmd =
       :code.priv_dir(:abex)
       |> to_string()
       |> Path.join("tag_list")
 
     response =
-      MuonTrap.cmd(read_all_tags_cmd, [ip, path])
+      cmd_runner().cmd(read_all_tags_cmd, [ip, path])
       |> assemble_response(:get_all_tags)
       |> encapsulate_response()
 
@@ -60,10 +64,10 @@ defmodule Abex.Tag do
       |> Path.join("rw_tag")
 
     cmd_args =
-      "protocol=ab_eip&gateway=#{ip}&path=#{path}&cpu=#{cpu}&elem_size=#{params[:elem_size]}&elem_count=#{params[:elem_count]}&name=#{params[:name]}"
+      "protocol=ab-eip&gateway=#{ip}&path=#{path}&plc=#{cpu}&elem_size=#{params[:elem_size]}&elem_count=#{params[:elem_count]}&name=#{params[:name]}"
 
     response =
-      MuonTrap.cmd(read_tag_cmd, ["-t", params[:data_type], "-p", cmd_args])
+      cmd_runner().cmd(read_tag_cmd, ["-t", params[:data_type], "-p", cmd_args])
       |> assemble_response(:read)
       |> data_type_parser(params[:data_type])
       |> encapsulate_response()
@@ -78,10 +82,10 @@ defmodule Abex.Tag do
       |> Path.join("rw_tag")
 
     cmd_args =
-        "protocol=ab_eip&gateway=#{ip}&path=#{path}&cpu=#{cpu}&elem_size=#{params[:elem_size]}&elem_count=#{params[:elem_count]}&name=#{params[:name]}"
+        "protocol=ab-eip&gateway=#{ip}&path=#{path}&plc=#{cpu}&elem_size=#{params[:elem_size]}&elem_count=#{params[:elem_count]}&name=#{params[:name]}"
 
     response =
-      MuonTrap.cmd(write_tag_cmd, ["-t", params[:data_type], "-w", params[:value] , "-p", cmd_args])
+      cmd_runner().cmd(write_tag_cmd, ["-t", params[:data_type], "-w", params[:value] , "-p", cmd_args])
       |> assemble_response(:write)
 
     {:reply, response, state}
