@@ -85,6 +85,12 @@ set(abex_UTIL_SOURCES
     "${base_PATH}/src/examples/compat_utils.c" 
     "${base_PATH}/src/examples/compat_utils.h")
 
+# Always use static linking for consistency and portability
+# This ensures the executables work on both development and embedded systems
+# without requiring libplctag.so to be present on the target system
+set(PLCTAG_LIBRARY plctag_static)
+message(STATUS "ABex: Using static linking with libplctag for portability")
+
 # Build abex custom programs
 foreach(program ${abex_PROGRAMS})
     set_source_files_properties("${abex_SRC_PATH}/${program}.c" PROPERTIES COMPILE_FLAGS ${BASE_C_FLAGS})
@@ -92,8 +98,11 @@ foreach(program ${abex_PROGRAMS})
     
     add_executable(${program} "${abex_SRC_PATH}/${program}.c" "${abex_UTIL_SOURCES}")
     
+    # Define LIBPLCTAG_STATIC for static linking
+    target_compile_definitions(${program} PRIVATE -DLIBPLCTAG_STATIC=1)
+    
     # Link with the plctag library and threads
-    target_link_libraries(${program} plctag_dyn)
+    target_link_libraries(${program} ${PLCTAG_LIBRARY})
     
     if(UNIX)
         if(CMAKE_THREAD_LIBS_INIT)
@@ -111,8 +120,11 @@ foreach(program ${libplctag_EXAMPLES})
     
     add_executable(${program} "${base_PATH}/src/examples/${program}.c" "${abex_UTIL_SOURCES}")
     
+    # Define LIBPLCTAG_STATIC for static linking
+    target_compile_definitions(${program} PRIVATE -DLIBPLCTAG_STATIC=1)
+    
     # Link with the plctag library and threads
-    target_link_libraries(${program} plctag_dyn)
+    target_link_libraries(${program} ${PLCTAG_LIBRARY})
     
     if(UNIX)
         if(CMAKE_THREAD_LIBS_INIT)
