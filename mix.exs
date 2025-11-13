@@ -4,7 +4,7 @@ defmodule Abex.MixProject do
   def project do
     [
       app: :abex,
-      version: "0.2.0",
+      version: "0.2.1",
       elixir: "~> 1.9",
       name: "ABex",
       description: description(),
@@ -40,6 +40,7 @@ defmodule Abex.MixProject do
         "test",
         "mix.exs",
         "README.md",
+        "CHANGELOG.md",
         "LICENSE"
       ],
       maintainers: ["valiot"],

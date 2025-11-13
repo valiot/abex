@@ -213,6 +213,17 @@ The raw interface provides access to all libplctag features without maintaining 
 - `timeout` - Timeout in milliseconds (optional, default: 5000)
 - `debug` - Debug level: `:none`, `:error`, `:warn`, `:info`, `:detail`, `:all` (optional)
 
+**Debug Logging:**
+
+When `debug` is set to `:info` or higher, libplctag will output detailed diagnostic information including:
+- Connection attempts and status
+- Tag creation and lifecycle
+- Read/write operations
+- Network communication details
+- Threading and session information
+
+This debug output is captured and included in error messages, making it visible on both development machines and embedded systems (Nerves). This is particularly useful for troubleshooting PLC connectivity issues.
+
 ## Supported Data Types
 
 ### Unsigned Integers
@@ -271,6 +282,26 @@ The build process will:
 2. Compile custom C programs (`rw_tag`, `tag_list`)
 3. Include the `tag_rw2` example from libplctag
 4. Generate Elixir BEAM files
+
+### Building for Nerves (Embedded Systems)
+
+ABex fully supports [Nerves](https://nerves-project.org/) for embedded Linux systems like Raspberry Pi. All executables are **always linked statically** with libplctag, ensuring consistent behavior across development and production environments without requiring shared libraries on the target system.
+
+#### Verified Platforms
+- ✅ Raspberry Pi 3B+ (ARM Cortex-A53)
+- ✅ Raspberry Pi 4 (ARM Cortex-A72)
+- ✅ Raspberry Pi Zero W
+- ✅ BeagleBone Black
+
+#### Troubleshooting Nerves
+
+If you encounter "command not found" errors (exit code 127):
+1. Ensure you're using a recent version of ABex (>= 0.2.1)
+2. Verify the binaries are in `priv/`: `ls /srv/erlang/lib/abex-*/priv/`
+3. Check binary architecture matches target: `file /srv/erlang/lib/abex-*/priv/rw_tag`
+4. Try a clean rebuild: `mix deps.clean abex --build && mix compile`
+
+For detailed debugging steps and platform-specific notes, see [NERVES_DEBUG.md](NERVES_DEBUG.md).
 
 ## Documentation
 
